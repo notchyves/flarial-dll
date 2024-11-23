@@ -20,6 +20,7 @@ configure_file(
 add_definitions(-DCOMMIT_HASH="${COMMIT_HASH}")
 
 if(MSVC)
+    add_compile_options(/await)
     add_compile_options(/MT)
 
     add_compile_options(/bigobj)
