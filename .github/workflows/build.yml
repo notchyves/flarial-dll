@@ -24,6 +24,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Flarial-Build
-        path: D:\a\Flarial\Flarial\build\Release\Flarial.dll
+        path: D:\a\flarial-dll\flarial-dll\build\Release\Flarial.dll
         if-no-files-found: warn
         include-hidden-files: false
