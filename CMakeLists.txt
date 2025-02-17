@@ -23,6 +23,7 @@ if(MSVC)
     add_compile_options(/MT)
 
     add_compile_options(/bigobj)
+    add_compile_options(/await)
 
     # Needed for fmt library
     add_compile_options(/utf-8)
