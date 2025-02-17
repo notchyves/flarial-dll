@@ -48,14 +48,7 @@ public:
     void onRaknetTick(RaknetTickEvent &event) override {
         if (module->isEnabled()) {
             std::string serverIP = SDK::getServerIP();
-            if (serverIP.find("hive") != std::string::npos) {
-                if (!module->restricted) {
-                    FlarialGUI::Notify("Can't use No Hurt Cam on " + serverIP); // TODO: move restrictions to API
-                    module->restricted = true;
-                }
-            } else {
-                module->restricted = false;
-            }
+            module->restricted = false;
         }
     }
 
