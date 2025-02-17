@@ -44,15 +44,7 @@ public:
         //enable action (key press)
         keybindActions.push_back([this](std::vector<std::any> args) -> std::any {
 
-            std::string serverIP = SDK::getServerIP();
-            if ((serverIP.find("hive") != std::string::npos ||
-                 serverIP.find("galaxite") != std::string::npos ||
-                 serverIP.find("venity") != std::string::npos)) { // TODO: make it only show once per server switch?
-                FlarialGUI::Notify("Can't use freelook on " + serverIP); // TODO: move restrictions to API
-                this->restricted = true;
-            } else {
-                this->restricted = false;
-            }
+            this->restricted = false;
             if (!this->restricted) {
                 if (this->settings.getSettingByName<bool>("toggle")->value) {
                     if (!this->active) {
