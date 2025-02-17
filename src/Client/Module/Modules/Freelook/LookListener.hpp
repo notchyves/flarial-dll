@@ -75,15 +75,7 @@ public:
         if (module->isKeyPartOfKeybind(event.key)) {
             // TODO: for multiple key this might not work!!!
             if (module->isKeybind(event.keys)) { // key is defo pressed
-                std::string serverIP = SDK::getServerIP();
-                if ((serverIP.find("hive") != std::string::npos ||
-                     serverIP.find("galaxite") != std::string::npos ||
-                     serverIP.find("venity") != std::string::npos)) { // TODO: make it only show once per server switch?
-                    FlarialGUI::Notify("Can't use freelook on " + serverIP); // TODO: move restrictions to API
-                    module->restricted = true;
-                } else {
-                    module->restricted = false;
-                }
+                module->restricted = false;
                 if (!module->restricted) {
                     if (module->settings.getSettingByName<bool>("toggle")->value) {
                         if (!module->active) {
