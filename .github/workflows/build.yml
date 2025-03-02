@@ -23,5 +23,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Flarial-Build
-          path: build/Release/Flarial.dll
+          path: D:\a\flarial-dll\flarial-dll\Release\Flarial.dll
           if-no-files-found: warn
