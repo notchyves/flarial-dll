@@ -3,7 +3,7 @@ project(Flarial)
 
 set(CMAKE_CXX_STANDARD 23)
 
-set(CLIENT_VERSION "2.00") # Update this for every new release
+set(CLIENT_VERSION "2.00") # Update this for every new release (troll)
 
 set(CLIENT_BUILD_TYPE "Release")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
