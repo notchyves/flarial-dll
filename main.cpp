@@ -11,6 +11,7 @@
 #include <Utils/Audio.hpp>
 
 #include "curl/curl/curl.h"
+#include "Scripting/EventManager/ScriptingEventManager.hpp"
 #include "src/Utils/Logger/crashlogs.hpp"
 #include "src/Client/Module/Modules/Nick/NickModule.hpp"
 #include "src/Client/Command/CommandManager.hpp"
@@ -21,6 +22,8 @@ std::chrono::steady_clock::time_point lastBeatTime;
 std::chrono::steady_clock::time_point lastVipFetchTime;
 std::chrono::steady_clock::time_point lastOnlineUsersFetchTime;
 std::chrono::steady_clock::time_point lastAnnouncementTime;
+static HANDLE mutex;
+
 
 void SavePlayerCache() {
     std::string playersListString = APIUtils::VectorToList(APIUtils::onlineUsers);
@@ -117,7 +120,9 @@ DWORD WINAPI init() {
                     }
                 }
 
-                APIUtils::onlineVips = std::move(updatedVips);
+                if (!updatedVips.empty()) {
+                    APIUtils::onlineVips = std::move(updatedVips);
+                }
                 lastVipFetchTime = now;
             } catch (const std::exception& e) {
                 Logger::error("An error occurred while parsing VIP users: {}", e.what());
@@ -145,17 +150,26 @@ DWORD WINAPI init() {
 
     Client::SaveSettings();
 
+    ModuleManager::terminate();
+    Logger::custom(fmt::fg(fmt::color::pink), "ModuleManager", "Shut down");
+    HookManager::terminate();
+    Logger::custom(fmt::fg(fmt::color::pink), "HookManager", "Shut down");
+    CommandManager::terminate();
+    Logger::custom(fmt::fg(fmt::color::pink), "CommandManager", "Shut down");
+
     ResizeHook::cleanShit();
 
     kiero::shutdown();
 
     Logger::custom(fmt::fg(fmt::color::pink), "Kiero", "Shut down");
 
-    ModuleManager::terminate();
-    HookManager::terminate();
-    CommandManager::terminate();
+    Scripting::unloadModules();
+    ScriptingEventManager::clearHandlers();
 
     Audio::cleanup();
+
+    Logger::custom(fmt::fg(fmt::color::pink), "Audio", "Shut down");
+
 
     MH_DisableHook(MH_ALL_HOOKS);
     MH_Uninitialize();
@@ -168,8 +182,10 @@ DWORD WINAPI init() {
 
     Logger::shutdown();
 
+    CloseHandle(mutex);
     FreeLibraryAndExitThread(Client::currentModule, 0);
 }
+
 
 BOOL APIENTRY DllMain(HMODULE instance, DWORD ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
@@ -178,9 +194,9 @@ BOOL APIENTRY DllMain(HMODULE instance, DWORD ul_reason_for_call, LPVOID lpReser
         Ensure a single instance of Flarial Client is loaded.
         Launchers may use this mutex to detect if the client is injected or not.
         */
-        HANDLE hMutex = CreateMutexW(NULL, FALSE, L"Flarial");
+        mutex = CreateMutexW(NULL, FALSE, L"Flarial");
         if (GetLastError()) {
-            CloseHandle(hMutex);
+            CloseHandle(mutex);
             return FALSE;
         }
 

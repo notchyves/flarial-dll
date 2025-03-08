@@ -215,6 +215,7 @@ void Blur::RenderToRTV(ID3D11RenderTargetView *pRenderTargetView, ID3D11ShaderRe
 {
     HRESULT hr;
     ID3D11DeviceContext* pContext = SwapchainHook::context;
+    if (!pContext) return;
     D3D11_DEPTH_STENCIL_DESC dsd{};
     dsd.DepthEnable = false;
     dsd.StencilEnable = false;
@@ -299,6 +300,7 @@ void Blur::RenderBlur(ID3D11RenderTargetView *pDstRenderTargetView, int iteratio
     }
 
     ID3D11DeviceContext* pContext = SwapchainHook::context;
+    if (!pContext) return;
 
     std::vector<ID3D11RenderTargetView *> renderTargetViews;
     std::vector<ID3D11ShaderResourceView *> shaderResourceViews;
@@ -405,7 +407,6 @@ void FlarialGUI::PrepareBlur(float intensity) {
     // Create Gaussian blur effect
     if (FlarialGUI::blur == nullptr) {
 
-        std::cout << "lol" << std::endl;
         D2D::context->CreateEffect(CLSID_D2D1GaussianBlur, &FlarialGUI::blur);
 
         FlarialGUI::blur->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);

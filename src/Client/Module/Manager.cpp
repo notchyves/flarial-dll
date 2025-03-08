@@ -70,6 +70,7 @@
 #include <Modules/Misc/PackChanger/PackChanger.hpp>
 #include <Modules/Misc/ScriptMarketplace/ScriptMarketplace.hpp>
 
+#include "Modules/202020/202020.hpp"
 #include "Modules/ItemPhysics/ItemPhysics.hpp"
 #include "Modules/Crosshair/Crosshair.hpp"
 #include "Modules/CustomCrosshair/CustomCrosshair.hpp"
@@ -97,6 +98,8 @@
 #include "Modules/JavaDynamicFOV/JavaDynamicFOV.hpp"
 #include "Modules/ItemUseDelayFix/ItemUseDelayFix.hpp"
 #include "../../Scripting/Console/ConsoleService.hpp"
+
+#include "Modules/Mousestrokes/Mousestrokes.hpp"
 
 namespace ModuleManager {
     std::map<size_t, std::shared_ptr<Module>> moduleMap;
@@ -132,7 +135,7 @@ void ModuleManager::initialize() {
     addModule<UpsideDown>(); //3
 
     addModule<ClickGUI>();
-
+    addModule<Module202020>();
     addModule<FPSCounter>();
     addModule<CPSCounter>();
     addModule<IPDisplay>();
@@ -145,7 +148,6 @@ void ModuleManager::initialize() {
     addModule<Time>();
     addModule<MEM>();
     addModule<Fullbright>();
-    addModule<ForceCoords>();
     addModule<Keystrokes>();
     addModule<Sneak>();
     addModule<Sprint>();
@@ -194,9 +196,12 @@ void ModuleManager::initialize() {
     // addModule<CompactChat>();
     addModule<ItemPhysics>();
 
-    if (VersionUtils::checkAboveOrEqual(21, 40)) {
+    addModule<Mousestrokes>();
+
+    if (VersionUtils::checkAboveOrEqual(21, 40) && VersionUtils::checkBetween(21, 50, 21, 59) == false) {
         addModule<JavaInventoryHotkeys>();
     }
+
 
     addModule<HiveStat>();
     addModule<Waypoints>();

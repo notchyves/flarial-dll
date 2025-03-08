@@ -63,7 +63,7 @@ ResizeHook::resizeCallback(IDXGISwapChain *pSwapChain, UINT bufferCount, UINT wi
 
     GuiScale::fixResize = true;
 
-    return funcOriginal(pSwapChain, bufferCount, width, height, newFormat, SwapchainHook::currentVsyncState ? flags : DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING);
+    return funcOriginal(pSwapChain, bufferCount, width, height, newFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING);
 }
 
 // TODO: get back to this to check
@@ -218,6 +218,7 @@ void ResizeHook::cleanShit(bool isResize) {
 
     }
 
+    SwapchainHook::init = false;
     FlarialGUI::scrollposmodifier = 0;
 
 
